@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta Name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETL流程、数据流图及ETL过程解决方案.ppt - KodExplorer - Powered by KodExplorer</title>
+    <script src="MTkwMTE4OTYwMDE4OTQ4.files/jquery-1.11.1.min.js"></script>
+    <script src="MTkwMTE4OTYwMDE4OTQ4.files/jquery.touchSwipe.min.js"></script>
+    <script src="MTkwMTE4OTYwMDE4OTQ4.files/meet.js"></script>
+    <link rel="stylesheet" href="MTkwMTE4OTYwMDE4OTQ4.files/style.css">
+    <!--[if (lt IE 9) & (!IEMobile)]>
+      <link rel="stylesheet" href="./MTkwMTE4OTYwMDE4OTQ4.files/ie_compatible.css">
+    <![endif]-->
+  </head>
+  <body>
+    <DIV id="loading" class="loader">
+      <DIV></DIV>
+    </DIV>
+    <DIV id="pageNum" STYLE="width:100px;height:30px;line-height:30px;text-align:center;font-size:24px;color:#fff;position:fixed;left:50%;bottom:20px;display:block;background-color:#000;opacity:0.5;z-index:5;">
+      <SPAN></SPAN>
+    </DIV>
+    <DIV id="header">
+      <a id="sideBtn" class="hbtn">
+        <em></em>
+        <em></em>
+        <em></em>
+      </a>
+      <a id="fullScreen" class="pull-right hbtn" href="#">
+        <img width="40" height="40" src="./MTkwMTE4OTYwMDE4OTQ4.files/full.png">
+      </a>
+      <h2 id="title"></h2>
+    </DIV>
+    <DIV id="sidebar"></DIV>
+    <DIV id="mainbody">
+      <DIV id="prev">&lt;</DIV>
+      <DIV id="next">&gt;</DIV>
+      <table width="100%" height="100%">
+        <tr>
+          <td align="center">
+            <DIV class="showPic" STYLE="position:relative">
+              <DIV class="ppt-turn-left-mask"></DIV>
+              <DIV class="ppt-turn-right-mask"></DIV>
+            </DIV>
+          </td>
+        </tr>
+      </table>
+    </DIV>
+  </body>
+  <script>
+$(function() {
+if(isMeeting &&!isSpeaker){
+   window.addEventListener('message',function(e){
+     var msg=JSON.parse(e.data);
+     switch(msg.type){
+        case 'page':{
+         play(msg.param);
+         break;
+       }
+     }
+   },false);
+}
+   var nowpage = 0;
+   var sUserAgent = navigator.userAgent.toLowerCase();
+   var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+   var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+   var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+   var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+   var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+   var bIsAndroid = sUserAgent.match(/android/i) == "android";
+   var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+   var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+if ((bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+       $(".full").css('display','none');
+ $("#fullScreen").css('display','none');
+$(".ppt-turn-left-mask,.ppt-turn-right-mask").remove();
+$(".showPic").swipe(
+   {
+       swipe:function(event, direction, distance, duration, fingerCount) {
+            if(direction == "right" || direction == "down"){
+                if(nowpage <= 0){
+                   nowpage = 0;
+               }else{
+                   nowpage--;
+              }
+               play(nowpage);
+           }
+           else if(direction == "left" || direction == "up"){
+               if(nowpage >= datas.length - 1){
+                  nowpage = datas.length - 1;
+              }else{
+                 nowpage++;
+              }
+               play(nowpage);
+          }
+      }
+  }
+);
+}
+      $('body').bind("selectstart", function () { return false; });
+var loader = {
+       el: $('#loading div'),
+        per: 30,
+        set: function(n) {
+            this.per = n;
+            this.el.width(n + '%');
+        },
+        fake: function(isfinished) {
+            if (isfinished) {
+                this.set(100);
+                clearTimeout(this.timmer);
+               return;
+            }
+            var self = this;
+            this.timmer = setTimeout(function() {
+                self.set(self.per += 10);
+                self.fake();
+            }, 400);
+        }
+    },
+    title = $('#title').hide(),
+    sidebar = $('#sidebar').hide(),
+    mainbody = $('#mainbody').hide(),
+    playImg,
+    thumbnail,
+    datas,
+    currentIndex = false,
+    play = function(index) {
+    nowpage = index;
+        var data = datas[index];
+ if(typeof(data)=="undefined") return false;
+        loader.set((index + 1) * 100 / thumbnail.length);
+        if (currentIndex !== false) thumbnail.eq(currentIndex).removeClass("active");
+        currentIndex = index;
+$("#pageNum span:eq(0)").html((currentIndex + 1) + "/" + datas.length);
+        var dom = thumbnail.eq(index).addClass("active")[0];
+        if (dom.scrollIntoViewIfNeeded) dom.scrollIntoViewIfNeeded();
+        if(!playImg){
+            playImg=$('<img class="playimg" src="' + data.url + '">').appendTo($(".showPic"));
+        }else{
+            playImg.attr('src',data.url);
+        }
+        prevBtn.toggle(index !== 0);
+        nextBtn.toggle(index !== thumbnail.length - 1);
+if(isSpeaker){
+   var msg={};
+   msg.type='page';
+   msg.param=index;
+   parent.postMessage(JSON.stringify(msg),serverhost);
+ }
+    },
+    next = function() {
+      if (currentIndex < thumbnail.length - 1) { 
+        play(currentIndex + 1);
+      }
+    },
+    prev = function() {
+        play(currentIndex - 1);
+    },
+    nextBtn = $('.ppt-turn-right-mask').click(next),
+    prevBtn = $('.ppt-turn-left-mask').click(prev),
+    fullScreen = function() {
+        var docElm = document.body;
+        if (docElm.requestFullscreen) {
+            docElm.requestFullscreen();
+        }
+        else if (docElm.mozRequestFullScreen) {
+            docElm.mozRequestFullScreen();
+       }
+        else if (docElm.webkitRequestFullScreen) {
+            docElm.webkitRequestFullScreen();
+        }
+        else if (docElm.msRequestFullscreen) {
+           docElm.msRequestFullscreen();
+       }
+    },
+bindOpenSide = function(){
+        var screenWidth = document.documentElement.clientWidth || window.innerWidth;
+        if($("body").hasClass("fullScreen")){
+                $('body').removeClass("openSide")
+        }else{
+            if(screenWidth <= 960){
+               $('body').removeClass("openSide")
+            }else{
+                $('body').addClass("openSide")
+           }
+        }
+        $(".openSide").length > 0 ? $("#pageNum").css("left",screenWidth * 0.58 - 50) : $("#pageNum").css("left",screenWidth/2 - 50)
+    },
+    fullScreenChange = function(x) {
+        $('body').toggleClass('fullScreen', x);
+    };
+$('#fullScreen').click(fullScreen);
+$(window).resize(bindOpenSide).resize();
+$('#sideBtn').click(function(){
+var screenWidth = document.documentElement.clientWidth || window.innerWidth;
+   $('body').toggleClass('openSide');
+$(".openSide").length > 0 ? $("#pageNum").css("left",screenWidth * 0.58 - 50) : $("#pageNum").css("left",screenWidth/2 - 50)
+});
+if (document.addEventListener) {
+document.addEventListener("fullscreenchange", function() {
+    fullScreenChange(document.fullscreen);
+});
+document.addEventListener("mozfullscreenchange", function() {
+    fullScreenChange(document.mozFullScreen);
+});
+document.addEventListener("webkitfullscreenchange", function() {
+    fullScreenChange(document.webkitIsFullScreen);
+});
+document.addEventListener("MSFullscreenChange", function() {
+    fullScreenChange(document.msFullscreenElement);
+});
+}
+ loader.fake();
+var v = '{"name": "ETL流程、数据流图及ETL过程解决方案.ppt","totalSize": 1,"curPage": 1,"totalPage": 1,"pageSize": 10,'
++'"data": ['
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/1.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/1.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/2.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/2.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/3.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/3.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/4.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/4.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/5.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/5.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/6.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/6.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/7.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/7.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/8.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/8.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/9.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/9.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/10.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/10.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/11.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/11.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/12.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/12.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/13.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/13.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/14.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/14.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/15.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/15.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/16.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/16.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/17.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/17.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/18.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/18.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/19.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/19.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/20.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/20.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/21.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/21.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/22.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/22.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/23.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/23.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/24.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/24.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/25.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/25.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/26.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/26.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/27.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/27.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/28.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/28.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/29.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/29.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/30.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/30.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/31.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/31.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/32.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/32.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/33.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/33.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/34.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/34.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/35.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/35.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/36.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/36.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/37.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/37.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/38.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/38.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/39.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/39.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/40.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/40.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/41.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/41.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/42.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/42.jpg" '
++' },'
++' {'
++'     "url":  "MTkwMTE4OTYwMDE4OTQ4.files/43.jpg" ,'
++'     "thumbUrl": "MTkwMTE4OTYwMDE4OTQ4.files/43.jpg" '
++' }'
+ +']'
++'}';
+loadData(v);
+ function loadData(v){
+ loader.fake(true);
+      var a = jQuery.parseJSON(v);
+       datas = a.data;
+       title.text(a.name);
+      var s = "",
+         len = datas.length;
+      jQuery.each(datas,function(i,o) {
+         s += '<div class="thumbnail" data-index="' + i + '"><img src="' + o.thumbUrl + '"><div class="side-pager">' + (i + 1 + '/' + len) + '</div></div>';
+      });
+      thumbnail = sidebar.html(s).children().on('click', function() {
+          play($(this).data('index'));
+      });
+      play(0);
+      setTimeout(function() {
+          title.fadeIn('fast');
+          sidebar.fadeIn();
+         mainbody.fadeIn('slow');
+      }, 450);
+$(document).keydown(function(event){
+    if(event.which == "37"||event.which == "38"){prev()}
+    if(event.which == "39"||event.which == "40") {next()} 
+}); 
+  }
+var ie=window.ActiveXObject ? window.atob ? 10 : document.addEventListener ? 9 : document.querySelector ? 8 : window.XMLHttpRequest ? 7 : 6 : undefined;
+     if(ie<9){
+         var mediaWidth=960;
+         $(window).resize(function(e){
+            var h=$(window).height()-40;
+            sidebar.height(h);
+            mainbody.height(h-20);
+           $('body').toggleClass('media',$(window).width()>mediaWidth);
+        }).resize();
+   }
+});</script>
+  <script src="./MTkwMTE4OTYwMDE4OTQ4.files/pagewatermark.js"></script>
+</html>

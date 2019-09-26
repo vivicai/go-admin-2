@@ -1,0 +1,31 @@
+{
+    "currentStep": 1,
+    "success": 1,
+    "taskUuid": "4f30cc1eb89f31589de9de3993e4bde6",
+    "hideData": [],
+    "steps": [
+        {
+            "name": "upload",
+            "process": "uploadProcess",
+            "status": 2,
+            "result": {
+                "result": 0,
+                "data": "27f70d85-02d7-4845-8740-63ae865d8497\/ETL流程、数据流图及ETL过程解决方案.ppt",
+                "message": "转换成功"
+            }
+        },
+        {
+            "name": "convert",
+            "process": "convert",
+            "status": 2,
+            "result": {
+                "result": 0,
+                "data": [
+                    "http:\/\/dcs.yozosoft.com:8000\/2019\/01\/18\/MTkwMTE4OTYwMjc0Nzgx.html"
+                ],
+                "message": "转换成功",
+                "type": 1
+            }
+        }
+    ]
+}

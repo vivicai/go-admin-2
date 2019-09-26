@@ -1,0 +1,31 @@
+{
+    "currentStep": 1,
+    "success": 1,
+    "taskUuid": "c615019a5ac1dc2d1193ed422d42110e",
+    "hideData": [],
+    "steps": [
+        {
+            "name": "upload",
+            "process": "uploadProcess",
+            "status": 2,
+            "result": {
+                "result": 0,
+                "data": "1638b7d2-3132-413b-b5dd-e98d47631181\/国家会计部最新出版常用会计分录大全.doc",
+                "message": "转换成功"
+            }
+        },
+        {
+            "name": "convert",
+            "process": "convert",
+            "status": 2,
+            "result": {
+                "result": 0,
+                "data": [
+                    "http:\/\/dcs.yozosoft.com:8000\/2019\/01\/18\/MTkwMTE4OTY4MzY0NTU0.html"
+                ],
+                "message": "转换成功",
+                "type": 0
+            }
+        }
+    ]
+}

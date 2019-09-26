@@ -1,0 +1,31 @@
+{
+    "currentStep": 1,
+    "success": 1,
+    "taskUuid": "57ed02e7a6ed0c044d50999cd5dd74da",
+    "hideData": [],
+    "steps": [
+        {
+            "name": "upload",
+            "process": "uploadProcess",
+            "status": 2,
+            "result": {
+                "result": 0,
+                "data": "88051acb-8b8b-4e56-8007-5b8b60e2b505\/工作簿1.xls",
+                "message": "转换成功"
+            }
+        },
+        {
+            "name": "convert",
+            "process": "convert",
+            "status": 2,
+            "result": {
+                "result": 0,
+                "data": [
+                    "http:\/\/dcs.yozosoft.com:8000\/2019\/01\/18\/MTkwMTE4OTgwMDQ2Mjgx.html"
+                ],
+                "message": "转换成功",
+                "type": 1
+            }
+        }
+    ]
+}
